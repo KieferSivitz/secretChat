@@ -1,3 +1,11 @@
+# -*- coding: utf-8 -*-
+
+# Form implementation generated from reading ui file 'secretChat.ui'
+#
+# Created by: PyQt5 UI code generator 5.5.1
+#
+# WARNING! All changes made in this file will be lost!
+
 from PyQt5 import QtCore, QtGui, QtWidgets
 import sys, socket
 from _thread import *
@@ -16,7 +24,7 @@ def update_list(self, data):
 def server_socket(self):
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.bind(('', 6190))
+        s.bind(('', 6191))
         s.listen(1)
     except socket.error as e:
         msg_box("Socket Error!", "Unable to Setup Local Socket, Port In Use")
