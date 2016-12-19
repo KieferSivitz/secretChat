@@ -1,6 +1,10 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import sys, socket
 from _thread import *
+
+def __init__(self, root):
+  self.server_socket = None
+  self.serverStatus = 0
     
 def app_version():
     msg_box("Application Version", "Null-Byte P2P Chat v1.0")
@@ -10,20 +14,21 @@ def msg_box(title, data):
     QtWidgets.QMessageBox.information(w, title, data)
 
 def update_list(self, data):
+    print(data)
     self.listWidget.addItem(data)
     print("\a")
 
 def server_socket(self):
     try:
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.bind(('', 6190))
-        s.listen(1)
+        self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server_socket.bind(('', 6190))
+        self.server_socket.listen(1)
     except socket.error as e:
         msg_box("Socket Error!", "Unable to Setup Local Socket, Port In Use")
         return
 
     while 1:
-        conn, addr = s.accept()
+        conn, addr = self.server_socket.accept()
 
         incoming_ip = str(addr[0])
         current_chat_ip = self.lineEdit.text()
@@ -35,7 +40,7 @@ def server_socket(self):
             update_list(self, data)
             conn.close()
 
-        s.close()
+        self.server_socket.close()
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -175,7 +180,8 @@ class Ui_MainWindow(object):
         try:
             #c.connect((ip_address, 6190))
             c = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            c.connect(ip_address)
+            print("brek")
+            c.connect((ip_address, 6190))
         except Exception as e:
             msg_box("Connection Refused", "The address you are trying to reach is currently unavailable")
             return
