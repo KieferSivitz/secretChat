@@ -146,7 +146,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Secret Chat"))
         self.label.setText(_translate("MainWindow", "IP Address:"))
         self.label_2.setText(_translate("MainWindow", "Nickname:"))
         self.pushButton_3.setText(_translate("MainWindow", "Send Message"))
@@ -160,7 +160,6 @@ class Ui_MainWindow(object):
 
     def start_server(self):
         start_new_thread(server_socket, (self,))
-        msg_box("Success", "Server Started Successfully")
 
     def client_send_message(self):
         ip_address = self.lineEdit.text()
@@ -172,10 +171,11 @@ class Ui_MainWindow(object):
 
         rmsg = nick + "#> " + rmessage
 
-        c = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
         try:
-            c.connect((ip_address, 6190))
+            #c.connect((ip_address, 6190))
+            c = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            c.connect(ip_address)
         except Exception as e:
             msg_box("Connection Refused", "The address you are trying to reach is currently unavailable")
             return
