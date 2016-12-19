@@ -11,7 +11,7 @@ To install pyqt5 the command is:
 
 To install python3 the command is:
 
-	`sudo apt-get install python3`
+	`sudo apt-get install python3-pyqt5`
 
 If git is not already installed on your machine, it can be installed with the following command:
 
