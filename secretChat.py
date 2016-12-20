@@ -82,6 +82,9 @@ class Ui_MainWindow(object):
         self.lineEdit_2 = QtWidgets.QLineEdit(self.frame)
         self.lineEdit_2.setGeometry(QtCore.QRect(420, 0, 231, 31))
         self.lineEdit_2.setObjectName("lineEdit_2")
+        self.textEdit = QtWidgets.QTextEdit(self.centralwidget)
+        self.textEdit.setGeometry(QtCore.QRect(0, 290, 561, 31))
+        self.textEdit.setObjectName("textEdit")
         self.frame_2 = QtWidgets.QFrame(self.centralwidget)
         self.frame_2.setGeometry(QtCore.QRect(0, 30, 651, 251))
         self.frame_2.setFrameShape(QtWidgets.QFrame.StyledPanel)
@@ -111,9 +114,7 @@ class Ui_MainWindow(object):
         self.pushButton_3.clicked.connect(self.client_send_message)
         #############################################################
 
-        self.textEdit = QtWidgets.QTextEdit(self.centralwidget)
-        self.textEdit.setGeometry(QtCore.QRect(0, 290, 561, 31))
-        self.textEdit.setObjectName("textEdit")
+        
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 655, 27))

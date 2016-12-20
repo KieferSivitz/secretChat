@@ -22,7 +22,7 @@ using the following command:
 
 	git clone https://github.com/KieferSivitz/secretChat.git
 
-Then navigate intto the directory containing the files:
+Then navigate into the directory containing the files:
 
 	cd secretChat
 
