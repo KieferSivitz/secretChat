@@ -14,7 +14,6 @@ def msg_box(title, data):
     QtWidgets.QMessageBox.information(w, title, data)
 
 def update_list(self, data):
-    print(data)
     self.listWidget.addItem(data)
     print("\a")
 
@@ -37,10 +36,11 @@ def server_socket(self):
             conn.close()
         else: 
             data = conn.recv(4096)
+            data.decode("utf-8")
             update_list(self, data)
             conn.close()
 
-        self.server_socket.close()
+    self.server_socket.close()
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -180,7 +180,6 @@ class Ui_MainWindow(object):
         try:
             #c.connect((ip_address, 6190))
             c = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            print("brek")
             c.connect((ip_address, 6190))
         except Exception as e:
             msg_box("Connection Refused", "The address you are trying to reach is currently unavailable")
