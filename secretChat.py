@@ -36,9 +36,7 @@ def server_socket(self):
             conn.close()
         else: 
             data = conn.recv(4096)
-            print(data)
             data = data.decode(encoding="utf-8")
-            print(data)
             update_list(self, data)
             conn.close()
 
@@ -184,7 +182,6 @@ class Ui_MainWindow(object):
             #c.connect((ip_address, 6190))
             c = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             c.connect((ip_address, 6190))
-            print("Connected!")
         except Exception as e:
             msg_box("Connection Refused", "The address you are trying to reach is currently unavailable")
             return
