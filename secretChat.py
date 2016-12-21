@@ -5,6 +5,7 @@ from _thread import *
 def __init__(self, root):
   self.server_socket = None
   self.serverStatus = 0
+
     
 def app_version():
     msg_box("Application Version", "Null-Byte P2P Chat v1.0")
@@ -41,7 +42,6 @@ def server_socket(self):
     self.server_socket.close()
 
 
-
 try:
     _encoding = QtGui.QApplication.UnicodeUTF8
     def _translate(context, text, disambig):
@@ -52,7 +52,6 @@ except AttributeError:
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
-
         self.start_server()
 
         MainWindow.setObjectName("MainWindow")
@@ -76,9 +75,15 @@ class Ui_MainWindow(object):
         self.lineEdit_2 = QtWidgets.QLineEdit(self.frame)
         self.lineEdit_2.setGeometry(QtCore.QRect(420, 0, 231, 31))
         self.lineEdit_2.setObjectName("lineEdit_2")
-        self.textEdit = QtWidgets.QTextEdit(self.centralwidget)
+        self.textEdit = QtWidgets.QLineEdit(self.centralwidget)
         self.textEdit.setGeometry(QtCore.QRect(0, 290, 561, 31))
         self.textEdit.setObjectName("textEdit")
+
+        ############################################################
+        # Sends message on enter pressed
+        self.textEdit.returnPressed.connect(self.client_send_message)
+        ############################################################
+
         self.frame_2 = QtWidgets.QFrame(self.centralwidget)
         self.frame_2.setGeometry(QtCore.QRect(0, 30, 651, 251))
         self.frame_2.setFrameShape(QtWidgets.QFrame.StyledPanel)
@@ -142,6 +147,8 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+
+
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Secret Chat"))
@@ -159,17 +166,13 @@ class Ui_MainWindow(object):
     def start_server(self):
         start_new_thread(server_socket, (self,))
 
-    def keyPressEvent(self, qKeyEvent):
-        print(qKeyEvent.key())
-        if qKeyEvent.key() == QtCore.Qt.Key_Return:
-            self.pushButton_3.clicked.connect(self.client_send_message)
 
     def client_send_message(self):
         ip_address = self.lineEdit.text()
 
         nick = self.lineEdit_2.text()
         nick = nick.replace(":", "")
-        rmessage = self.textEdit.toPlainText()
+        rmessage = self.textEdit.text()
         rmessage = rmessage.replace(":", "")
 
         rmsg = nick + ": " + rmessage
@@ -195,10 +198,12 @@ class Ui_MainWindow(object):
 
 if __name__ == "__main__":
     import sys
+
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
     MainWindow.show()
+
     sys.exit(app.exec_())
 
