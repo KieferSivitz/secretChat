@@ -32,13 +32,11 @@ def server_socket(self):
         incoming_ip = str(addr[0])
         current_chat_ip = self.lineEdit.text()
 
-        if incoming_ip != current_chat_ip:
-            conn.close()
-        else: 
-            data = conn.recv(4096)
-            data = data.decode(encoding="utf-8")
-            update_list(self, data)
-            conn.close()
+    
+        data = conn.recv(4096)
+        data = data.decode(encoding="utf-8")
+        update_list(self, data)
+        conn.close()
 
     self.server_socket.close()
 
