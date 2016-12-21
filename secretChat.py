@@ -42,11 +42,7 @@ def server_socket(self):
 
     self.server_socket.close()
 
-try:
-    _fromUtf8 = QtCore.QString.fromUtf8
-except AttributeError:
-    def _fromUtf8(s):
-        return s
+
 
 try:
     _encoding = QtGui.QApplication.UnicodeUTF8

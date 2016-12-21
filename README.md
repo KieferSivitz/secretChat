@@ -1,5 +1,5 @@
-# secretChat
-This is a side project of mine to create an end to endencrypted p2p chat application. To learn more about and solidify my current knowledge of networks.
+# Secret Chat
+The goal of this project is to create an open source peer to peer encrypted chat client. The goal of which is to have a simple, reliable chat client that is known to be secure. I'm creating this because I want to be able to talk to people and know that my client is uncompromised, and I want to maintain the integrity of my messages. And I want others to be able to do the same thing.
 
 ## Installation Instructions (Linux)
 This program uses pyqt5 and python 3, and as such both of these must be installed for it to work.
@@ -29,3 +29,5 @@ Then navigate into the directory containing the files:
 And the following command will start the program:
 
 	python3 secretChat.py
+
+
