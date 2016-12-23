@@ -180,8 +180,10 @@ class Ui_MainWindow(object):
 
 
         try:
-            c = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            context = ssl.create_default_context()
+            c = context.wrap_socket(socket.socket(socket.AF_INET, socket.SOCK_STREAM))
             c.connect((ip_address, 6190))
+
         except Exception as e:
             msg_box("Connection Refused", "The address you are trying to reach is currently unavailable")
             return
@@ -198,6 +200,13 @@ class Ui_MainWindow(object):
 
 if __name__ == "__main__":
     import sys
+    
+    try: 
+        import ssl
+    except ImportError:
+        msg_box("Import Error", "Unable to import SSL, your communications will not be secure")
+
+        
 
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
