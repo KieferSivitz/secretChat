@@ -1,6 +1,10 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import sys, socket
-from _thread import *
+from _thread import *    
+try: 
+    import ssl
+except ImportError:
+    msg_box("Import Error", "Unable to import SSL, your communications will not be secure")
 
 def __init__(self, root):
   self.server_socket = None
@@ -18,8 +22,21 @@ def update_list(self, data):
     self.listWidget.addItem(data)
     print("\a")
 
+def deal_with_client(connstream):
+    data = connstream.recv(4096)
+    while(data):
+        data = data.decode(encoding="utf-8")
+        update_list(self, data)
+        connstream.close()    
+        data = connstream.recv(4096)
+
+
 def server_socket(self):
     try:
+        context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
+        print("ssl created")
+        #context.load_cert_chain(certfile="mycertfile", keyfile="mykeyfile")
+        print("chain loaded")
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_socket.bind(('', 6190))
         self.server_socket.listen(1)
@@ -29,15 +46,15 @@ def server_socket(self):
 
     while 1:
         conn, addr = self.server_socket.accept()
-
+        connstream = context.wrap_socket(conn, server_side=True)
         incoming_ip = str(addr[0])
         current_chat_ip = self.lineEdit.text()
 
-    
-        data = conn.recv(4096)
-        data = data.decode(encoding="utf-8")
-        update_list(self, data)
-        conn.close()
+        try:
+            deal_with_client(connstream)
+        finally:
+            connstream.shutdown(socket.SHUT_RDWR)
+            connstream.close()
 
     self.server_socket.close()
 
@@ -181,8 +198,13 @@ class Ui_MainWindow(object):
 
         try:
             context = ssl.create_default_context()
-            c = context.wrap_socket(socket.socket(socket.AF_INET, socket.SOCK_STREAM))
+            print(context)
+            c = context.wrap_socket(socket.socket(socket.AF_INET, socket.SOCK_STREAM), server_hostname)
+            print("C")
             c.connect((ip_address, 6190))
+            print("connected")
+            cert = conn.getpeercert()
+            print(cert)
 
         except Exception as e:
             msg_box("Connection Refused", "The address you are trying to reach is currently unavailable")
@@ -200,13 +222,6 @@ class Ui_MainWindow(object):
 
 if __name__ == "__main__":
     import sys
-    
-    try: 
-        import ssl
-    except ImportError:
-        msg_box("Import Error", "Unable to import SSL, your communications will not be secure")
-
-        
 
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
