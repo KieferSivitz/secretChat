@@ -197,11 +197,12 @@ class Ui_MainWindow(object):
 
 
         try:
-            context = ssl.create_default_context()
-            print(context)
-            c = context.wrap_socket(socket.socket(socket.AF_INET, socket.SOCK_STREAM), server_hostname)
-            print("C")
-            c.connect((ip_address, 6190))
+            # Create Context and socket
+            #context = ssl.create_default_context()
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            wrappedSocket = ssl.wrap_socket(sock, ssl_version=ssl.PROTOCOL_TLSv1, ciphers="ADH-AES256-SHA")
+
+            wrappedSocket.connect((ip_address, 6190))
             print("connected")
             cert = conn.getpeercert()
             print(cert)
