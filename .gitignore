@@ -1,1 +1,4 @@
 chatTest.pem
+server.crt
+server.csr
+server.key
