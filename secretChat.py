@@ -42,12 +42,6 @@ def server_socket(self):
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_socket.bind(('', 6190))
         self.server_socket.listen(1)
-
-        conn, addr = self.server_socket.accept()
-        context = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
-        context.set_ciphers("ADH-AES256-SHA")
-        context.load_dh_params("dhparam.pem")
-        connstream = context.wrap_socket(conn, server_side=True)
         #keyfile="server.key", certfile="server.crt")
 
     except socket.error as e:
@@ -55,6 +49,12 @@ def server_socket(self):
         return
 
     while 1:
+
+        conn, addr = self.server_socket.accept()
+        context = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
+        context.set_ciphers("ADH-AES256-SHA")
+        context.load_dh_params("dhparam.pem")
+        connstream = context.wrap_socket(conn, server_side=True)
 
         incoming_ip = str(addr[0])
         #current_chat_ip = self.lineEdit.text()
@@ -207,13 +207,13 @@ class Ui_MainWindow(object):
 
         try:
             # Create Context and socket
-            context = ssl.create_default_context()
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            wrappedSocket = context.wrap_socket(sock, ca_certs="server.crt", cert_reqs=ssl.CERT_REQUIRED)
-            #ssl_version=ssl.PROTOCOL_TLSv1, ciphers="ADH-AES256-SHA")
-            print("214")
+            wrappedSocket = ssl.wrap_socket(sock, 
+                                            ca_certs="server.crt",
+                                            cert_reqs=ssl.CERT_REQUIRED)
+            print("215")
             wrappedSocket.connect((ip_address, 6190))
-            print("216")
+            print("217")
 
             print(repr(wrappedSocket.getpeername()))
             print(wrappedSocket.cipher())
