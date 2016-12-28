@@ -3,3 +3,5 @@ server.crt
 server.csr
 server.key
 dhparam.pem
+private.pem
+server.pem
