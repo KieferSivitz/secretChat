@@ -55,7 +55,7 @@ def server_socket(self):
         #context.load_dh_params("dhparam.pem")
         connstream = ssl.wrap_socket(conn, 
                                     server_side="True", 
-                                    certfile="server.crt", 
+                                    certfile="server.csr", 
                                     keyfile="private.pem")
 
         #incoming_ip = str(addr[0])
@@ -211,7 +211,7 @@ class Ui_MainWindow(object):
             # Create Context and socket
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             wrappedSocket = ssl.wrap_socket(sock, 
-                                            ca_certs="server.csr",
+                                            ca_certs="server.crt",
                                             cert_reqs=ssl.CERT_REQUIRED)
             wrappedSocket.connect((ip_address, 6190))
             print("217")
