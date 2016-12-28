@@ -213,7 +213,7 @@ class Ui_MainWindow(object):
 
             wrappedSocket.connect((ip_address, 6190))
             print("connected")
-            #cert = conn.getpeercert()
+            cert = conn.getpeercert()
             #print(cert)
 
         except Exception as e:
@@ -221,13 +221,13 @@ class Ui_MainWindow(object):
             return
 
         try:
-            c.send(encodedMessage)
+            wrappedSocket.send(encodedMessage)
             self.listWidget.addItem(rmsg)
             self.textEdit.setText("")
         except Exception as e:
             msg_box("Connection Refused", "The message cannot be sent. Endpoint not connected")
 
-        c.close()
+        wrappedSocket.close()
 
 
 if __name__ == "__main__":
