@@ -209,19 +209,22 @@ class Ui_MainWindow(object):
             # Create Context and socket
             #context = ssl.create_default_context()
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            wrappedSocket = ssl.wrap_socket(sock, ssl_version=ssl.PROTOCOL_TLSv1, ciphers="ADH-AES256-SHA")
+            wrappedSocket = ssl.wrap_socket(sock, ca_certs="server.crt", cert_reqs=ssl.CERT_REQUIRED)
+            #ssl_version=ssl.PROTOCOL_TLSv1, ciphers="ADH-AES256-SHA")
 
             wrappedSocket.connect((ip_address, 6190))
-            print("connected")
-            cert = conn.getpeercert()
-            #print(cert)
 
+            print(repr(wrappedSocket.getpeername()))
+            print(wrappedSocket.cipher())
+            print(pprint.pformat(wrappedSocket.getpeercert()))
+            
         except Exception as e:
             msg_box("Connection Refused", "The address you are trying to reach is currently unavailable")
             return
 
         try:
-            wrappedSocket.send(encodedMessage)
+            #wrappedSocket.send(encodedMessage)
+            wrappedSocket.write(encodedMessage)
             self.listWidget.addItem(rmsg)
             self.textEdit.setText("")
         except Exception as e:
