@@ -41,6 +41,8 @@ def deal_with_client(connstream):
 def server_socket(self):
     try:
         context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
+        #context = ssl.SSLContext(ssl.PROTOCOL_SSLv23)
+        context.verify_mode = ssl.CERT_NONE
         context.load_cert_chain(certfile="server.crt", keyfile="server.key") 
 
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -52,11 +54,14 @@ def server_socket(self):
         return
 
     while 1:
+        conn, addr = self.server_socket.accept()
+        connstream = context.wrap_socket(conn, server_side=True,
+                          do_handshake_on_connect=False)
         try:
-            conn, addr = self.server_socket.accept()
-            connstream = context.wrap_socket(conn, server_side=True)
-        except: 
-            print("Failed because server did not trust the certificate")
+            connstream.do_handshake()
+        except ssl.SSLError as err:
+            if err.args[1].find("tlsv1 alert") == -1:
+                raise
             # Failed because server did not trust the certificate
         #incoming_ip = str(addr[0])
         #current_chat_ip = self.lineEdit.text()
@@ -212,7 +217,7 @@ class Ui_MainWindow(object):
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             wrappedSocket = ssl.wrap_socket(sock, 
                                             ca_certs="server.crt",
-                                            cert_reqs=ssl.CERT_REQUIRED)
+                                            cert_reqs=ssl.CERT_NONE)
             wrappedSocket.connect((ip_address, 6190))
             print("217")
 
