@@ -42,7 +42,6 @@ def server_socket(self):
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_socket.bind(('', 6190))
         self.server_socket.listen(1)
-        #keyfile="server.key", certfile="server.crt")
 
     except socket.error as e:
         msg_box("Socket Error!", "Unable to Setup Local Socket, Port In Use")
@@ -51,12 +50,15 @@ def server_socket(self):
     while 1:
 
         conn, addr = self.server_socket.accept()
-        context = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
-        context.set_ciphers("ADH-AES256-SHA")
-        context.load_dh_params("dhparam.pem")
-        connstream = context.wrap_socket(conn, server_side=True)
+        #context = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
+        #context.set_ciphers("ADH-AES256-SHA")
+        #context.load_dh_params("dhparam.pem")
+        connstream = ssl.wrap_socket(conn, 
+                                    server_side="True", 
+                                    certfile="server.crt", 
+                                    keyfile="private.pem")
 
-        incoming_ip = str(addr[0])
+        #incoming_ip = str(addr[0])
         #current_chat_ip = self.lineEdit.text()
 
         try:
@@ -209,9 +211,8 @@ class Ui_MainWindow(object):
             # Create Context and socket
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             wrappedSocket = ssl.wrap_socket(sock, 
-                                            ca_certs="server.crt",
+                                            ca_certs="server.csr",
                                             cert_reqs=ssl.CERT_REQUIRED)
-            print("215")
             wrappedSocket.connect((ip_address, 6190))
             print("217")
 
