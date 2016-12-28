@@ -23,32 +23,41 @@ def update_list(self, data):
     print("\a")
 
 def deal_with_client(connstream):
-    data = connstream.recv(4096)
+    data = connstream.recv(2048)
+    print(data)
     while(data):
+        print("test27")
         data = data.decode(encoding="utf-8")
+        print("test29")
         update_list(self, data)
+        print("test31")
         connstream.close()    
+        print("test33")
         data = connstream.recv(4096)
+        print("test35")
 
 
 def server_socket(self):
     try:
-        context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
-        print("ssl created")
-        #context.load_cert_chain(certfile="mycertfile", keyfile="mykeyfile")
-        print("chain loaded")
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_socket.bind(('', 6190))
         self.server_socket.listen(1)
+
+        conn, addr = self.server_socket.accept()
+        context = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
+        context.set_ciphers("ADH-AES256-SHA")
+        context.load_dh_params("dhparam.pem")
+        connstream = context.wrap_socket(conn, server_side=True)
+        #keyfile="server.key", certfile="server.crt")
+
     except socket.error as e:
         msg_box("Socket Error!", "Unable to Setup Local Socket, Port In Use")
         return
 
     while 1:
-        conn, addr = self.server_socket.accept()
-        connstream = context.wrap_socket(conn, server_side=True)
+
         incoming_ip = str(addr[0])
-        current_chat_ip = self.lineEdit.text()
+        #current_chat_ip = self.lineEdit.text()
 
         try:
             deal_with_client(connstream)
@@ -204,8 +213,8 @@ class Ui_MainWindow(object):
 
             wrappedSocket.connect((ip_address, 6190))
             print("connected")
-            cert = conn.getpeercert()
-            print(cert)
+            #cert = conn.getpeercert()
+            #print(cert)
 
         except Exception as e:
             msg_box("Connection Refused", "The address you are trying to reach is currently unavailable")
