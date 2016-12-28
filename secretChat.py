@@ -9,6 +9,7 @@ except ImportError:
 def __init__(self, root):
   self.server_socket = None
   self.serverStatus = 0
+  import cert
 
     
 def app_version():
@@ -39,6 +40,9 @@ def deal_with_client(connstream):
 
 def server_socket(self):
     try:
+        context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
+        context.load_cert_chain(certfile="server.crt", keyfile="server.key") 
+
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_socket.bind(('', 6190))
         self.server_socket.listen(1)
@@ -48,16 +52,12 @@ def server_socket(self):
         return
 
     while 1:
-
-        conn, addr = self.server_socket.accept()
-        #context = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
-        #context.set_ciphers("ADH-AES256-SHA")
-        #context.load_dh_params("dhparam.pem")
-        connstream = ssl.wrap_socket(conn, 
-                                    server_side="True", 
-                                    certfile="server.csr", 
-                                    keyfile="private.pem")
-
+        try:
+            conn, addr = self.server_socket.accept()
+            connstream = context.wrap_socket(conn, server_side=True)
+        except: 
+            print("Failed because server did not trust the certificate")
+            # Failed because server did not trust the certificate
         #incoming_ip = str(addr[0])
         #current_chat_ip = self.lineEdit.text()
 
