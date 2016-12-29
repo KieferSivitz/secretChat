@@ -21,15 +21,15 @@ def msg_box(title, data):
 
 def update_list(self, data):
     self.listWidget.addItem(data)
-    print("\a")
 
 def server_socket(self):
     try:
+        # Set up SSL settings specifying no need for a certification and the path to the certfile/key
         context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
-        #context = ssl.SSLContext(ssl.PROTOCOL_SSLv23)
         context.verify_mode = ssl.CERT_NONE
         context.load_cert_chain(certfile="server.crt", keyfile="server.key") 
 
+        # Create the socket and bind it to listen on port 6190
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_socket.bind(('', 6190))
         self.server_socket.listen(1)
@@ -39,6 +39,7 @@ def server_socket(self):
         return
 
     while 1:
+        # Accept the socket and wrap the socket in SSL
         conn, addr = self.server_socket.accept()
         connstream = context.wrap_socket(conn, server_side=True,
                           do_handshake_on_connect=False)
@@ -59,7 +60,6 @@ def server_socket(self):
             connstream.shutdown(socket.SHUT_RDWR)
             connstream.close()
 
-    self.server_socket.close()
 
 
 try:
@@ -190,6 +190,7 @@ class Ui_MainWindow(object):
     def client_send_message(self):
         ip_address = self.lineEdit.text()
 
+        # Format the message with sender's name and message text
         nick = self.lineEdit_2.text()
         nick = nick.replace(":", "")
         rmessage = self.textEdit.text()
@@ -206,15 +207,13 @@ class Ui_MainWindow(object):
                                             ca_certs="server.crt",
                                             cert_reqs=ssl.CERT_NONE)
             wrappedSocket.connect((ip_address, 6190))
-
-            print(repr(wrappedSocket.getpeername()))
-            print(wrappedSocket.cipher())
             
         except Exception as e:
             msg_box("Connection Refused", "The address you are trying to reach is currently unavailable")
             return
 
         try:
+            # Send message through the socket and print the message to the window
             wrappedSocket.write(encodedMessage)
             self.listWidget.addItem(rmsg)
             self.textEdit.setText("")
