@@ -23,7 +23,7 @@ def update_list(self, data):
     self.listWidget.addItem(data)
     print("\a")
 
-def deal_with_client(connstream):
+def deal_with_client(self, connstream):
     data = connstream.recv(2048)
     print("Data Recieved:")
     print(data)
@@ -64,7 +64,7 @@ def server_socket(self):
         #current_chat_ip = self.lineEdit.text()
 
         try:
-            deal_with_client(connstream)
+            deal_with_client(self, connstream)
         finally:
             connstream.shutdown(socket.SHUT_RDWR)
             connstream.close()
@@ -221,7 +221,7 @@ class Ui_MainWindow(object):
 
             print(repr(wrappedSocket.getpeername()))
             print(wrappedSocket.cipher())
-            print(pprint.pformat(wrappedSocket.getpeercert()))
+            #print(pprint.pformat(wrappedSocket.getpeercert()))
             
         except Exception as e:
             msg_box("Connection Refused", "The address you are trying to reach is currently unavailable")
