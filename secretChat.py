@@ -25,17 +25,14 @@ def update_list(self, data):
 
 def deal_with_client(connstream):
     data = connstream.recv(2048)
+    print("Data Recieved:")
     print(data)
     while(data):
-        print("test27")
+        print("Decoding Message")
         data = data.decode(encoding="utf-8")
-        print("test29")
         update_list(self, data)
-        print("test31")
         connstream.close()    
-        print("test33")
         data = connstream.recv(4096)
-        print("test35")
 
 
 def server_socket(self):
@@ -218,8 +215,9 @@ class Ui_MainWindow(object):
             wrappedSocket = ssl.wrap_socket(sock, 
                                             ca_certs="server.crt",
                                             cert_reqs=ssl.CERT_NONE)
+            print("Socket Wrapped, Connecting")
             wrappedSocket.connect((ip_address, 6190))
-            print("217")
+            print("Socket Connected")
 
             print(repr(wrappedSocket.getpeername()))
             print(wrappedSocket.cipher())
