@@ -1,15 +1,10 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import sys, socket
-from _thread import *    
-try: 
-    import ssl
-except ImportError:
-    msg_box("Import Error", "Unable to import SSL, your communications will not be secure")
+from _thread import *
 
 def __init__(self, root):
   self.server_socket = None
   self.serverStatus = 0
-  import cert
 
     
 def app_version():
@@ -21,45 +16,30 @@ def msg_box(title, data):
 
 def update_list(self, data):
     self.listWidget.addItem(data)
+    print("\a")
 
 def server_socket(self):
     try:
-        # Set up SSL settings specifying no need for a certification and the path to the certfile/key
-        context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
-        context.verify_mode = ssl.CERT_NONE
-        context.load_cert_chain(certfile="server.crt", keyfile="server.key") 
-
-        # Create the socket and bind it to listen on port 6190
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_socket.bind(('', 6190))
         self.server_socket.listen(1)
-
     except socket.error as e:
         msg_box("Socket Error!", "Unable to Setup Local Socket, Port In Use")
         return
 
     while 1:
-        # Accept the socket and wrap the socket in SSL
         conn, addr = self.server_socket.accept()
-        connstream = context.wrap_socket(conn, server_side=True,
-                          do_handshake_on_connect=False)
-        try:
-            connstream.do_handshake()
-        except ssl.SSLError as err:
-            if err.args[1].find("tlsv1 alert") == -1:
-                raise
 
-        try:
-            #Deal With Client
-            data = connstream.recv(2048)
-            while(data):
-                data = data.decode(encoding="utf-8")
-                update_list(self, data)
-                data = connstream.recv(2048)
-        finally:
-            connstream.shutdown(socket.SHUT_RDWR)
-            connstream.close()
+        incoming_ip = str(addr[0])
+        current_chat_ip = self.lineEdit.text()
 
+    
+        data = conn.recv(4096)
+        data = data.decode(encoding="utf-8")
+        update_list(self, data)
+        conn.close()
+
+    self.server_socket.close()
 
 
 try:
@@ -190,7 +170,6 @@ class Ui_MainWindow(object):
     def client_send_message(self):
         ip_address = self.lineEdit.text()
 
-        # Format the message with sender's name and message text
         nick = self.lineEdit_2.text()
         nick = nick.replace(":", "")
         rmessage = self.textEdit.text()
@@ -201,26 +180,20 @@ class Ui_MainWindow(object):
 
 
         try:
-            # Create Context and socket
-            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            wrappedSocket = ssl.wrap_socket(sock, 
-                                            ca_certs="server.crt",
-                                            cert_reqs=ssl.CERT_NONE)
-            wrappedSocket.connect((ip_address, 6190))
-            
+            c = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            c.connect((ip_address, 6190))
         except Exception as e:
             msg_box("Connection Refused", "The address you are trying to reach is currently unavailable")
             return
 
         try:
-            # Send message through the socket and print the message to the window
-            wrappedSocket.write(encodedMessage)
+            c.send(encodedMessage)
             self.listWidget.addItem(rmsg)
             self.textEdit.setText("")
         except Exception as e:
             msg_box("Connection Refused", "The message cannot be sent. Endpoint not connected")
 
-        wrappedSocket.close()
+        c.close()
 
 
 if __name__ == "__main__":
