@@ -5,11 +5,11 @@ The goal of this project is to create an open source peer to peer encrypted chat
 This program uses pyqt5 and python 3, and as such both of these must be installed for it to work.
 If one or both of these are already installed on the machine, these steps can be skipped.
 
-To install pyqt5 the command is:
-
-	sudo apt-get install pyqt5
-
 To install python3 the command is:
+
+	sudo apt-get install python3
+
+To install pyqt5 the command is:
 
 	sudo apt-get install python3-pyqt5
 
