@@ -27,17 +27,17 @@ Then navigate into the directory containing the files:
 	cd secretChat
 
 
-	### Create a Self-Signed SSL Certificate:
-	
-	Check if you have openssl installed:
+### Create a Self-Signed SSL Certificate:
+
+Check if you have openssl installed:
 
 	which openssl
 
-	If this does not return a path you must install openssl:
+If this does not return a path you must install openssl:
 
 	apt-get install openssl
 
-		#### Generateing a Private key and signing request
+#### Generateing a Private key and signing request
 
 		openssl genrsa -des3 -passout pass:x -out server.pass.key 2048
 
