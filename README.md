@@ -6,6 +6,9 @@ The goal of this project is to create an open source peer to peer encrypted chat
 	wget "https://github.com/KieferSivitz/secretChat/raw/master/setup"
 	bash setup
 
+	// If theree are any missing dependencies, to install them run 
+	sudo bash setup
+
 ### Feel free to leave any or all of the questions blank, as the certificates are generated for encryption but not authentication
 
 Once the setup is complete move into the folder containing the program
