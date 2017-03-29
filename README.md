@@ -3,7 +3,7 @@ The goal of this project is to create an open source peer to peer encrypted chat
 
 ## Installation Instructions (Linux)
 
-	wget "https://github.com/KieferSivitz/secretChat/setup"
+	wget "https://github.com/KieferSivitz/secretChat/blob/master/setup"
 	bash setup
 
 ### Feel free to leave any or all of the questions blank, as the certificates are generated for encryption but not authentication
