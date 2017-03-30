@@ -23,5 +23,7 @@ echo " "
 openssl req -new -key server.key -out server.csr
 openssl x509 -req -sha256 -days 365 -in server.csr -signkey server.key -out server.crt
 
+rm setup
+
 echo "All done! type 'cd secretChat' to move into the folder with our program"
 echo "Execute 'python3 secretChat.py' to run the program!"
