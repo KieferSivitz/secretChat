@@ -1,6 +1,10 @@
+# secretChat.py
+
 from PyQt5 import QtCore, QtGui, QtWidgets
 import sys, socket
 from _thread import *    
+
+
 try: 
     import ssl
 except ImportError:
