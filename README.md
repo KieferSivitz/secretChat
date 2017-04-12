@@ -13,7 +13,7 @@ The goal of this project is to create an open source peer to peer encrypted chat
 
 Once the setup is complete move into the folder containing the program
 
-	cd secretChat.py
+	cd secretChat
 
 The following command will start the program:
 
